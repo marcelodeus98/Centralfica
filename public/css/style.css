@@ -1,0 +1,50 @@
+body {
+    /* fallback for old browsers */
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(0,100,0, 1), rgba(0,250,154,1));
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(0, 100, 0, 1), rgba(0, 250, 154, 1))
+};
+
+.img-fluid{
+    border: 1px ;
+    border-radius: 8px 8px 8px 8px;
+};
+
+.container-central-img{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Três colunas */
+    justify-items: center;
+    gap: 10px;
+};
+
+.container-itens-img{
+    display:grid;
+}
+
+.img-itens{
+    width: 250px;
+    height: 250px;
+    border: 1px ;
+    border-radius: 8px 8px 8px 8px;
+    margin:1rem;
+};
+
+footer{
+    background-color: #FFF;
+}
+
+/* Media Query */
+
+
+@media (max-width: 900px) {
+    .container-central-img {
+        display: flex !important;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center; 
+    };
+};
+

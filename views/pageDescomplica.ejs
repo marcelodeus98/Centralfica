@@ -1,0 +1,104 @@
+<%- include('./partials/header.ejs') -%>
+
+<style>
+    .container-central-img{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Três colunas */
+        justify-items: center;
+        gap: 10px;
+    };
+
+
+@media (min-width: 900px) {
+    .container-central-img {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center; 
+    };
+};
+
+</style>
+
+<body>
+    <%- include ('./partials/navbar.ejs') -%>
+
+    <div class="container">
+        <hr/>
+        <div class="card mt-6">
+            <div class="card-header">
+                <h2>Página Fica Descomplica</h2>
+            </div>
+            <div class="card-body">
+                <h2>Cadastrar novas imagens para o bainer de imagens</h2>
+                <form method="POST" action="/imgers/create"  enctype="multipart/form-data">
+                    <h4>Imagens em carrosel</h4>
+                    <h6>Obs: Tamanho da imagem deverá seguir a seguinte dimensão <b>800x600</b></h6>
+                    <input class="form-control" name="image" type="file" accept="image/*" required></br>
+                    
+                    <center><button class="btn btn-success">Registrar</button></center>
+                    
+                    <hr>
+                </form>
+                <form method="POST" action="/imgersban/create"  enctype="multipart/form-data">
+                    <h4>Imagem do Banner</h4>
+                    <h6>Obs: Tamanho da imagem deverá seguir a seguinte dimensão <b>1919x628</b></h6>
+                    <input class="form-control" name="image" type="file" accept="image/*" required></br>
+
+                    <center><button class="btn btn-success">Registrar</button></center>
+
+                    <hr><hr>
+                </form>
+                <h2>Imagens cadastradas</h2>
+                <h4>Imagens em Carrosel</h4>
+                <div class="container-central-img">
+                    <% if (imgers && imgers.length > 0) { %>
+                        <% imgers.forEach(indice => { %>
+                            <div class="container-itens-img">
+                                <img class="img-itens" id="<%=indice.id%>" name="<%=indice.id%>" src="data:image/jpeg;base64,<%= indice.data %>" alt="Image"/>
+                                    <center>
+                                        <button class="btn btn-danger" onclick="deleteImage('imgers', '<%= indice.id %>')" style="margin:1rem;">Deletar</button>
+                                    </center>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+                <hr>
+                <h4>Imagem do Banner</h4>
+                <div class="container-central-img">
+                    <% if (imgersban && imgersban.length > 0) { %>
+                        <% imgersban.forEach(indice => { %>
+                            <div class="container-itens-img">
+                                <img class="img-itens" id="<%=indice.id%>" name="<%=indice.id%>" src="data:image/jpeg;base64,<%= indice.data %>" alt="Image"/>
+                                    <center>
+                                        <button class="btn btn-danger" onclick="deleteImage('imgersban', '<%= indice.id %>')" style="margin:1rem;">Deletar</button>
+                                    </center>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('./partials/navFooter.ejs') -%>
+
+    <script>
+        function deleteImage(entity, id) {
+            if (confirm('Tem certeza que deseja deletar esta imagem?')) {
+                fetch(`/${entity}/delete/${id}`, {
+                    method: 'DELETE' 
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.msg === 'Image deleted successfully.') {
+                        // Redirecionar manualmente após a resposta
+                        window.location.href ='/pagina_fica_descomplica';
+                    } else {
+                        alert('Erro ao deletar a imagem');
+                    }
+                })
+                .catch(err => console.error('Erro:', err));
+            }
+        }
+    </script>
+</body>

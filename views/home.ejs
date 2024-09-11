@@ -1,0 +1,65 @@
+<%- include ('./partials/header.ejs') %>
+<body>
+    <section class="vh-80 gradient-custom"> 
+        <div class="container py-5 h-80">
+            <div class="row d-flex justify-content-center align-items-center h-80">
+                <div class="col-10 col-md-6 col-lg-4 col-xl-5">
+                    <div class="card bg-light text-white" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <div class="mb-md-5 mt-md-4 pb-5">
+                                <div>
+                                    <nav class="navbar">
+                                        <div class="container-fluid">
+                                            <span style="color: black;">Bem vindo</span>
+                                            
+                                            <!-- Formulário de logout -->
+                                            <form action="/logout" method="POST" style="display:inline;">
+                                                <button id="logout-btn" class="btn"><img src="/image/sair.png" alt="exit" width="20px"></button>
+                                            </form>
+                                        </div>
+                                    </nav>
+                                </div>
+
+                                <h2 class="fw-bold mb-2 text-uppercase" style="color: black;">Operações disponivéis</h2>
+                                <div class="container-itens-options">
+                                    <!-- Links de navegação -->
+                                    <a class="btn btn-success" href="/pagina_principal">Página principal - slideshow</a>
+                                    <a class="btn btn-success" href="/pagina_fica_descomplica">Página Fica Descomplica</a>
+                                    <a class="btn btn-success" href="/pagina_assine_ja">Página Assine Já</a>
+                                    <a class="btn btn-success" href="/pagina_servicos">Página Serviços</a>
+                                    <a class="btn btn-success" href="/pagina_chats">Página Atendimento</a>
+                                    <a class="btn btn-success" href="/pagina_trabalhe_conosco">Trabalhe Conosco</a>
+                                    <a class="btn btn-success" href="/pagina_ouvidoria">Ouvidoria</a>
+                                    <a class="btn btn-success" href="/pagina_usuarios">Usuários</a>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include ('./partials/navFooter.ejs') -%>
+</body>
+
+<script>
+    document.querySelector('#logout-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/'; // Redireciona para a página de login
+            } else {
+                alert('Erro ao fazer logout');
+            }
+        }).catch(error => {
+            console.error('Erro ao fazer logout:', error);
+        });
+    });
+</script>

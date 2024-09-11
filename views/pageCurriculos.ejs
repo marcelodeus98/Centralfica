@@ -1,0 +1,80 @@
+<%- include('./partials/header.ejs') -%>
+
+<style>
+    .container-central-img{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Três colunas */
+        justify-items: center;
+        gap: 10px;
+    };
+
+
+@media (min-width: 900px) {
+    .container-central-img {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center; 
+    };
+};
+
+</style>
+
+<body>
+    <%- include ('./partials/navbar.ejs') -%>
+
+    <div class="container">
+        <hr/>
+        <div class="card mt-6">
+            <div class="card-header">
+                <h2>Trabalhe conosco</h2>
+            </div>
+            <hr>
+            <div class="container-central-pdf">
+                <% if (pdfs && pdfs.length > 0) { %>
+                    <% pdfs.forEach(indice => { %>
+                        <div class="container-itens-pdf">
+                            <center>
+                                <p><strong>Nome do Arquivo:</strong> <%= indice.arquivo_nome %></p>
+                                
+                                <a href="/curriculos/download/<%= indice.id %>" class="btn btn-primary" style="margin:1rem;">Baixar PDF</a>
+                                
+                                <a href="/curriculos/view/<%= indice.id %>" target="_blank" class="btn btn-info" style="margin:1rem;">Visualizar PDF</a>
+                            
+                                <button class="btn btn-danger" type="button" style="margin:1rem;" onclick="deleteFile('<%=indice.id%>')">
+                                        Deletar
+                                </button>
+                            </center>
+                            
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('./partials/navFooter.ejs') -%>
+
+    <script>
+        function deleteFile(id) {
+            if (confirm('Tem certeza que deseja deletar este arquivo?')) {
+                fetch(`/curriculos/delete/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.msg === 'PDF deleted successfully.') {
+                        // Redireciona após a deleção com sucesso
+                        window.location.href = '/pagina_trabalhe_conosco';
+                    } else {
+                        alert('Erro ao deletar o arquivo');
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro:', err);
+                    alert('Erro ao deletar o arquivo');
+                });
+            }
+    }
+
+    </script>
+</body>

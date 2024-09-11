@@ -1,0 +1,111 @@
+<%- include('./partials/header.ejs') -%>
+
+<style>
+    .container-central-img{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Três colunas */
+        justify-items: center;
+        gap: 10px;
+    };
+
+
+@media (min-width: 900px) {
+    .container-central-img {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center; 
+    };
+};
+
+</style>
+
+<body>
+    <%- include ('./partials/navbar.ejs') -%>
+
+    <div class="container">
+        <hr/>
+        <div class="card mt-6">
+            <div class="card-header">
+                <h2>Página Principal - slideshow</h2>
+            </div>
+            <div class="card-body">
+                <h2>Cadastrar novas imagens</h2>
+                <form method="POST" action="/indez/create" enctype="multipart/form-data">
+                    <input class="form-control" name="name" type="text" placeholder="Insira o nome da imagem" required></br>
+                    <input class="form-control" name="timeban" type="text" placeholder="Insira o tempo de transição para imagem" required></br>
+                    <h4>Web Desktop</h4>
+                    <h6>Obs: Tamanho da imagem deverá seguir a seguinte dimensão <b>1919x628</b></h6>
+                    <input class="form-control" name="imagePC" type="file" accept="image/*" required></br>
+                
+                    <h4>Web Mobile</h4>
+                    <h6>Obs: Tamanho da imagem deverá seguir a seguinte dimensão <b>800x600</b></h6>
+                    <input class="form-control" name="imageMobi" type="file" accept="image/*" required></br>
+                
+                    <center><button class="btn btn-success">Registrar</button></center>
+                
+                    <hr>
+                </form>
+                
+                <hr>
+
+                <h2>Imagens cadastradas:</h2>
+                <h4>Web Desktop</h4>
+                <div class="container-central-img">
+                    <% if (indez && indez.length > 0) { %>
+                        <% indez.forEach(indice => { %>
+                            <% if (indice.dataPC) { %> <!-- Verifica se existe dataPC -->
+                                <div class="container-itens-img">
+                                    <img class="img-itens" id="<%= indice.id %>" name="<%= indice.id %>" src="data:image/jpeg;base64,<%= indice.dataPC.toString('base64') %>" alt="Image Desktop"/>
+                                        <center>
+                                            <button class="btn btn-danger" onclick="deleteImage('<%= indice.id %>')" style="margin:1rem;">
+                                                Deletar
+                                            </button>
+                                    </form>
+                                </div>
+                            <% } %>
+                        <% }) %>
+                    <% } %>
+                </div>
+
+                <h4>Web Mobile</h4>
+                <div class="container-central-img">
+                    <% if (indez && indez.length > 0) { %>
+                        <% indez.forEach(indice => { %>
+                            <% if (indice.dataMobi) { %> <!-- Verifica se existe dataMobi -->
+                                <div class="container-itens-img">
+                                    <img class="img-itens" id="<%= indice.id %>" name="<%= indice.id %>" src="data:image/jpeg;base64,<%= indice.dataMobi.toString('base64') %>" alt="Image Mobile"/>
+                                        <center>
+                                            <button class="btn btn-danger" onclick="deleteImage('<%= indice.id %>')" style="margin:1rem;">
+                                                Deletar
+                                            </button>
+                                        </center>
+                                </div>
+                            <% } %>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('./partials/navFooter.ejs') -%>
+
+    <script>
+        function deleteImage(id) {
+            if (confirm('Tem certeza que deseja deletar esta imagem?')) {
+                fetch(`/indez/delete/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.msg === 'Image deleted successfully.') {
+                        window.location.href = '/pagina_principal';
+                    } else {
+                        alert('Erro ao deletar a imagem');
+                    }
+                })
+                .catch(err => console.error('Erro:', err));
+            }
+        }
+    </script>
+</body>

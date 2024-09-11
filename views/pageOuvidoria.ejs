@@ -1,0 +1,74 @@
+<%- include('./partials/header.ejs') -%>
+
+<style>
+    .container-central-ouvidoria{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Três colunas */
+        justify-items: center;
+        gap: 10px;
+    };
+
+    @media (min-width: 900px) {
+        .container-central-ouvidoria {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center; 
+        };
+    };
+</style>
+
+<body>
+    <%- include ('./partials/navbar.ejs') -%>
+
+    <div class="container">
+        <hr/>
+        <div class="card mt-6">
+            <div class="card-header">
+                <h2>Página de Ouvidoria</h2>
+            </div>
+            <div class="card-body">
+                <h2>Registros de Ouvidoria</h2>
+
+                <div class="container-central-ouvidoria">
+                    <% if (result && result.length > 0) { %>
+                        <% result.forEach(indice => { %>
+                            <div class="container-itens-ouvidoria">
+                                <p><strong>Nome:</strong> <%= indice.nome %></p>
+                                <p><strong>Email:</strong> <%= indice.email %></p>
+                                <p><strong>Texto:</strong> <%= indice.texto %></p>
+                                <p><strong>Data de Envio:</strong> <%= indice.data_envio %></p>
+                                <center>
+                                    <button class="btn btn-danger" onclick="deleteOuvidoria('<%= indice.id %>')" style="margin:1rem;">Deletar</button>
+                                </center>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p>Nenhum registro encontrado.</p>
+                    <% } %>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <%- include ('./partials/navFooter.ejs') -%>
+
+    <script>
+        function deleteOuvidoria(id) {
+            if (confirm('Tem certeza que deseja deletar este registro de ouvidoria?')) {
+                fetch(`/ouvidoria/delete/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.msg === 'Messege deleted successfully.') {
+                        window.location.href = '/pagina_ouvidoria';
+                    } else {
+                        alert('Erro ao deletar o registro');
+                    }
+                })
+                .catch(err => console.error('Erro:', err));
+            }
+        }
+    </script>
+</body>
